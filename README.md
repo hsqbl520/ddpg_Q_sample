@@ -1,4 +1,2 @@
 # simple_re_path
-极简版
-自己写的，但是在计算Q值使用了sample而不是predict
-DDPG算法是predict，但是倒立摆测试中sample更稳定
+极简版，但是在计算Q值使用了sample而不是predict。DDPG算法是predict，但是倒立摆测试中sample更稳定
