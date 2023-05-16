@@ -28,8 +28,11 @@ class DDPG(parl.Algorithm):
         action = paddle.tanh(mean)
         return action
 
-    def sample(self, obs):
-        policy = self.model.policy(obs)
+    def sample(self, obs,use_target=False):
+        if use_target:
+            policy = self.target_model.policy(obs)
+        else:
+            policy = self.model.policy(obs)
 
         mean, std = policy[0], paddle.exp(policy[1])
         mean_shape = paddle.to_tensor(mean.shape, dtype='int64')
@@ -56,7 +59,7 @@ class DDPG(parl.Algorithm):
         return cost
 
     def _critic_learn(self, obs, act, reward, obs_next, terminal):
-        target_act_next = self.sample(obs_next)
+        target_act_next = self.sample(obs_next,True)
         target_act_next = target_act_next.detach()
         target_q_next = self.target_model.value(obs_next, target_act_next)
         target_q = reward + self.gamma * (1.0 - terminal) * target_q_next.detach()
